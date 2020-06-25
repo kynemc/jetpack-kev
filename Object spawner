@@ -3,23 +3,23 @@ for(_x=0; _x < width_; _x++){
 	for(_y=0; _y < height_; _y++){
   
 		if (grid_[# _x, _y] == VOID) && (grid_[# _x-1, _y] == FLOOR)&& (grid_[# _x+1, _y] == FLOOR) && (grid_[# _x, _y-1] == FLOOR) && (grid_[# _x, _y+1] == FLOOR)
-    {
+    		{
        grid_[# _x, _y] = FLOOR
 		   show_debug_message(ds_grid_get(grid_,_x,_y))
 		}
     
 		if (grid_[# _x, _y] == VOID)
-    {
+    		{
 			instance_create_depth(_x * CELLSIZE, _y * CELLSIZE, -1, obj_block)
 		}
 		
 		if (grid_[# _x, _y] == FLOOR)
-    {
+    		{
 			//instance_create_depth(_x * CELLSIZE, _y * CELLSIZE, 0, obj_backblock)
 		}
     
 		if (grid_[# _x, _y] == PLAYERSTART)
-    {
+   		 {
 			instance_create_depth(_x * CELLSIZE, _y * CELLSIZE, -2, obj_hero)
       
 			if (global.Level != 0)
