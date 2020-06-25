@@ -4,7 +4,7 @@ for(_x=0; _x < width_; _x++){
   
 		if (grid_[# _x, _y] == VOID) && (grid_[# _x-1, _y] == FLOOR)&& (grid_[# _x+1, _y] == FLOOR) && (grid_[# _x, _y-1] == FLOOR) && (grid_[# _x, _y+1] == FLOOR)
     		{
-       grid_[# _x, _y] = FLOOR
+       		   grid_[# _x, _y] = FLOOR
 		   show_debug_message(ds_grid_get(grid_,_x,_y))
 		}
     
