@@ -1,0 +1,127 @@
+// Character Movement Script
+accel = clamp(accel,-5,10)
+v_speed = clamp(v_speed,-5,10)
+
+l_key = keyboard_check(ord("A"))
+r_key = keyboard_check(ord("D"))
+u_key = keyboard_check(ord("W"))
+d_key = keyboard_check(ord("S"))
+s_key = keyboard_check_pressed(vk_space)
+
+h_input = r_key - l_key;
+v_input = d_key - u_key;
+
+
+if (h_input != 0) && (h_speed < 4) && (h_speed > -4)
+{
+	h_speed += h_input*2*acceleration_/3
+}
+	else
+	{
+	h_speed = lerp(h_speed,0,.1)
+	}
+
+if (v_input != 0) && (j_fuel > 0)
+{
+	v_speed += v_input*v_acceleration_
+}
+	else
+	{
+		if (v_input == 1)
+		{
+		v_speed = lerp(v_speed,0,0.001)
+		}
+		v_speed += gravity_ 	
+	}
+
+if (l_key)
+{
+	image_xscale = -1;
+}
+if (r_key)
+{
+	image_xscale = 1;
+}
+if (u_key) && (j_fuel > 0)
+{
+	j_fuel -= .7
+	jetpack = true;
+}
+
+if( image_xscale == 1)  && (u_key) && (j_fuel >=0)
+
+{
+	instance_create_depth(x-4,y+11,-2,obj_jetleak)
+	sprite_index = spr_hero;	
+	}
+
+	else if( image_xscale == -1) && (u_key) && (j_fuel >=0)
+	{
+	instance_create_depth(x+4,y+11,-2,obj_jetleak)
+	sprite_index = spr_hero;	
+}
+
+if (!u_key) 
+{
+	jetpack = false;
+	sprite_index = spr_heron;
+	if (j_fuel < 200)
+	{
+	j_fuel += .6;
+	}
+}
+
+if (s_key)
+{
+	if (image_xscale == -1)
+	{
+		target_ = instance_place(x-32,y,obj_block)
+		if(place_meeting(x-32,y,target_)){
+		instance_destroy(target_)
+	}
+	} else if (image_xscale == 1)
+	{
+		target_ = instance_place(x+32,y,obj_block)
+		if(place_meeting(x+32,y,target_)){
+		instance_destroy(target_)
+	}
+}
+}
+if (place_meeting(x+h_speed,y,obj_block))
+{
+	while (!place_meeting(x+sign(h_speed),y,obj_block))
+	{
+		x += sign(h_speed)
+	}
+	h_speed = (-h_speed/18);
+}
+	x += h_speed;
+
+if (place_meeting(x,y+v_speed,obj_block))
+{
+	while (!place_meeting(x,y+sign(v_speed),obj_block))
+{
+	y += sign(v_speed)
+	
+	
+}
+
+if (jetpack == true) && (v_speed > 0) && (v_speed < 20) 
+{
+	//acceleration_ += .1
+	v_speed = -v_speed
+	h_speed = lerp(h_speed, h_speed *acceleration_*6,2)
+}
+else 
+{
+	v_speed = 0;
+	acceleration_= 0.3
+}
+}
+y += v_speed;
+/*if (!place_meeting(x, y+1,obj_block))
+{
+	v_speed += gravity_;
+}
+*/
+
