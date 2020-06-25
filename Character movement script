@@ -2,6 +2,7 @@
 accel = clamp(accel,-5,10)
 v_speed = clamp(v_speed,-5,10)
 
+//Setup for keyboard checks to make things faster later
 l_key = keyboard_check(ord("A"))
 r_key = keyboard_check(ord("D"))
 u_key = keyboard_check(ord("W"))
@@ -12,6 +13,7 @@ h_input = r_key - l_key;
 v_input = d_key - u_key;
 
 
+// Left and right movement
 if (h_input != 0) && (h_speed < 4) && (h_speed > -4)
 {
 	h_speed += h_input*2*acceleration_/3
@@ -21,6 +23,7 @@ if (h_input != 0) && (h_speed < 4) && (h_speed > -4)
 	h_speed = lerp(h_speed,0,.1)
 	}
 
+// Jetpack flight controls
 if (v_input != 0) && (j_fuel > 0)
 {
 	v_speed += v_input*v_acceleration_
@@ -33,7 +36,7 @@ if (v_input != 0) && (j_fuel > 0)
 		}
 		v_speed += gravity_ 	
 	}
-
+// flips character sprite depending on direction facing
 if (l_key)
 {
 	image_xscale = -1;
@@ -48,6 +51,7 @@ if (u_key) && (j_fuel > 0)
 	jetpack = true;
 }
 
+// creates jetpack flame trail
 if( image_xscale == 1)  && (u_key) && (j_fuel >=0)
 
 {
@@ -71,6 +75,7 @@ if (!u_key)
 	}
 }
 
+// lets you delete a square in front of you with spacebar (for testing)
 if (s_key)
 {
 	if (image_xscale == -1)
@@ -87,6 +92,8 @@ if (s_key)
 	}
 }
 }
+
+// horizontal collision
 if (place_meeting(x+h_speed,y,obj_block))
 {
 	while (!place_meeting(x+sign(h_speed),y,obj_block))
@@ -97,6 +104,7 @@ if (place_meeting(x+h_speed,y,obj_block))
 }
 	x += h_speed;
 
+// vertical collision
 if (place_meeting(x,y+v_speed,obj_block))
 {
 	while (!place_meeting(x,y+sign(v_speed),obj_block))
@@ -105,7 +113,6 @@ if (place_meeting(x,y+v_speed,obj_block))
 	
 	
 }
-
 if (jetpack == true) && (v_speed > 0) && (v_speed < 20) 
 {
 	//acceleration_ += .1
