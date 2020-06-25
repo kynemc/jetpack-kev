@@ -1,0 +1,188 @@
+// You can write your code in this editor
+randomize();
+
+width_ = room_width div CELLSIZE;
+height_ = room_height div CELLSIZE;
+grid_ = ds_grid_create(width_, height_);
+
+if (file_exists("map"+string(global.Level)+".ini")) 
+{
+	if (global.direction_ == "forwards")
+	{
+  ini_open("map"+string(global.Level)+".ini");
+  var t_string = ini_read_string("Saved", "0", "");
+  if t_string != ""
+  {
+    ds_grid_read(grid_, t_string);
+    ini_close();
+  }
+	}
+	if (global.direction_ == "backwards")
+	{
+ini_open("map"+string(global.Level)+".ini");
+var t_string = ini_read_string("Saved", "0", "");
+if t_string != ""
+   {
+   ds_grid_read(grid_, t_string);
+   ini_close();
+   }
+	}
+}
+   else
+   {
+	   
+ini_close();
+
+
+ds_grid_set_region(grid_, 0, 0, width_ -1, height_ -1,VOID)
+
+var controller_x = width_ div 2;
+var controller_y = height_ div 2;
+var controller_x2 = width_ div 2;
+var controller_y2 = height_ div 2;
+var controller_direction = irandom(3);
+var controller_direction2 = irandom(3);
+var steps_ = 1000;
+
+
+
+var direction_change_odds = 2;
+
+repeat(steps_)
+{	
+	if (controller_direction == 1)
+	{
+		direction_change_odds = 2;
+	}
+	else if (controller_direction == 5)
+	{
+		direction_change_odds = 3;
+	}
+	else
+	{
+		direction_change_odds = 4;
+	}
+	
+	grid_[# controller_x, controller_y] = FLOOR
+	grid_[# controller_x, controller_y-1] = FLOOR
+	grid_[# controller_x, controller_y-2] = FLOOR
+	
+	if (irandom(direction_change_odds) == direction_change_odds) {
+		controller_direction = irandom(3);	
+	}
+	
+	
+	var x_direction = lengthdir_x(1, controller_direction * 90)
+	var y_direction = lengthdir_y(1, controller_direction * 90)
+	
+
+	controller_x += x_direction;
+	controller_y += y_direction;
+
+	if (controller_x < 2 || controller_x >= width_ - 2) {
+		controller_x += -x_direction * 2;
+	}
+	if (controller_y < 2 || controller_y >= height_ - 4) {
+		controller_y += -y_direction * 2;
+	}
+}	
+repeat(steps_)
+{	
+	if (controller_direction2 == 1)
+	{
+		direction_change_odds = 3;
+	}
+	else if (controller_direction2 == 5)
+	{
+		direction_change_odds = 4;
+	}
+	else
+	{
+		direction_change_odds = 2;
+	}
+	
+	grid_[# controller_x2, controller_y2] = FLOOR
+	grid_[# controller_x2, controller_y2-1] = FLOOR
+	
+	if (irandom(direction_change_odds) == direction_change_odds) {
+		controller_direction2 = irandom(3);	
+	}
+	
+	
+	var x_direction2 = lengthdir_x(1, controller_direction2 * 90)
+	var y_direction2 = lengthdir_y(1, controller_direction2 * 90)
+	
+	//if (grid_[# controller_x2+x_direction2, controller_y2+y_direction2] == VOID)
+	//{
+		show_debug_message("x_d: "+string(x_direction2))
+		show_debug_message("y_d: "+string(y_direction2))
+	controller_x2 += x_direction2;
+	controller_y2 += y_direction2;
+	//}
+	//	else
+	//{
+		controller_direction2 = irandom(3);
+	//	continue
+	//}
+	
+	
+	if (controller_x2 < 2 || controller_x2 >= width_ - 2) {
+		controller_x2 += -x_direction2 * 2;
+	}
+	if (controller_y2 < 2 || controller_y >= height_ - 4) {
+		controller_y2 += -y_direction2 * 2;
+	}
+}		
+
+
+repeat(1000)
+{
+	randx = irandom(width_)
+	randy = irandom(height_)
+	if(grid_[# randx, randy] == FLOOR) && (grid_[# randx, randy +1] == VOID) && (grid_[# randx, randy -1] == FLOOR) && (grid_[# randx-1, randy -1] == FLOOR) && (grid_[# randx+1, randy -1] == FLOOR)
+	{
+	grid_[# randx, randy] = PLAYERSTART
+	break
+	}
+}
+repeat(1000)
+{
+	randx = irandom(width_)
+	randy = irandom(height_)
+	if(grid_[# randx, randy] == FLOOR) && (grid_[# randx, randy +1] == VOID) && (grid_[# randx, randy -1] == FLOOR)
+	{
+	grid_[# randx, randy] = DOORWAY
+	break
+	}
+}
+repeat(1000)
+{
+	randx = irandom(width_)
+	randy = irandom(height_)
+	if(grid_[# randx, randy] == FLOOR) && (grid_[# randx, randy +1] == VOID) && (grid_[# randx, randy -1] == FLOOR)
+	{
+	grid_[# randx, randy] = DOORWAY2
+	break
+	}
+}
+repeat(10000)
+{
+	randx = irandom(width_)
+	randy = irandom(height_)
+	show_debug_message(ds_grid_get_sum(grid_, randx, randy, randx + 5, randy + 5))
+	
+	if(ds_grid_get_sum(grid_, randx, randy, randx + 5, randy + 5) <= -284)&& (ds_grid_get_sum(grid_, randx, randy, randx + 5, randy + 5) >= -286)&&(grid_[# randx, randy +5] == VOID) && (grid_[# randx, randy] == VOID) && (grid_[# randx+5, randy] == VOID) && (grid_[# randx+5, randy +5] == VOID) 
+	{
+		ds_grid_set_region(grid_,randx+1,randy+1,randx+4,randy+4, FLOOR)
+		grid_[# randx +4, randy +4] = WIZARD
+
+		break
+	}
+}
+
+   }
+   ini_open("map" +string(global.Level)+".ini");
+var t_string;
+t_string = ds_grid_write(grid_);
+ini_write_string("Saved", "0", t_string);
+ini_close();
