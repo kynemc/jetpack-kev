@@ -1,53 +1,61 @@
-// You can write your code in this editor
+// change the randomising seed to avoid repetition
 randomize();
 
 width_ = room_width div CELLSIZE;
 height_ = room_height div CELLSIZE;
+
+// create an array to store the map information
 grid_ = ds_grid_create(width_, height_);
 
+// check if saved map exists on computer, if not create a new one
 if (file_exists("map"+string(global.Level)+".ini")) 
 {
+	// global.direction is a global variable which determines if you're going forward or backwards in levels.
 	if (global.direction_ == "forwards")
 	{
-  ini_open("map"+string(global.Level)+".ini");
-  var t_string = ini_read_string("Saved", "0", "");
-  if t_string != ""
-  {
-    ds_grid_read(grid_, t_string);
-    ini_close();
-  }
+ 		 ini_open("map"+string(global.Level)+".ini");
+ 		 var t_string = ini_read_string("Saved", "0", "");
+		 
+ 	if (t_string != "")
+  	{
+   		ds_grid_read(grid_, t_string);
+    		ini_close();
+  	}
 	}
 	if (global.direction_ == "backwards")
 	{
-ini_open("map"+string(global.Level)+".ini");
-var t_string = ini_read_string("Saved", "0", "");
-if t_string != ""
-   {
-   ds_grid_read(grid_, t_string);
-   ini_close();
-   }
+		ini_open("map"+string(global.Level)+".ini");
+		var t_string = ini_read_string("Saved", "0", "");
+		
+	if (t_string != "")
+  	{
+   		ds_grid_read(grid_, t_string);
+	   	ini_close();
+   	}
 	}
-}
-   else
-   {
-	   
-ini_close();
+	}
+  		else
+   		{
+	   		ini_close();
+			
+			//sets both walkers to the middle of the empty map
+			ds_grid_set_region(grid_, 0, 0, width_ -1, height_ -1,VOID)
+			var controller_x = width_ div 2;
+			var controller_y = height_ div 2;
+			var controller_x2 = width_ div 2;
+			var controller_y2 = height_ div 2;
+			
+			//creates a variable which will be a random number between 0 and 3 when called
+			var controller_direction = irandom(3);
+			var controller_direction2 = irandom(3);
+			
+			//sets the amount of steps the walkers will take
+			var steps_ = 1000;
+			
+			// this is the odds that either walker will change direction
+			var direction_change_odds = 2;
 
-
-ds_grid_set_region(grid_, 0, 0, width_ -1, height_ -1,VOID)
-
-var controller_x = width_ div 2;
-var controller_y = height_ div 2;
-var controller_x2 = width_ div 2;
-var controller_y2 = height_ div 2;
-var controller_direction = irandom(3);
-var controller_direction2 = irandom(3);
-var steps_ = 1000;
-
-
-
-var direction_change_odds = 2;
-
+// the walker walks in a random pattern as setup already for 1000 steps and marks each tile its steps on so we know where the floor should go
 repeat(steps_)
 {	
 	if (controller_direction == 1)
@@ -135,36 +143,45 @@ repeat(steps_)
 }		
 
 
+// repeatedly picks a random spot on the map, and if suitable it will spawn the player start location there
 repeat(1000)
 {
 	randx = irandom(width_)
 	randy = irandom(height_)
+	
 	if(grid_[# randx, randy] == FLOOR) && (grid_[# randx, randy +1] == VOID) && (grid_[# randx, randy -1] == FLOOR) && (grid_[# randx-1, randy -1] == FLOOR) && (grid_[# randx+1, randy -1] == FLOOR)
 	{
-	grid_[# randx, randy] = PLAYERSTART
-	break
+		grid_[# randx, randy] = PLAYERSTART
+		break
 	}
 }
+
+// repeatedly picks a random spot on the map, and if suitable it will spawn a doorway there
 repeat(1000)
 {
 	randx = irandom(width_)
 	randy = irandom(height_)
+	
 	if(grid_[# randx, randy] == FLOOR) && (grid_[# randx, randy +1] == VOID) && (grid_[# randx, randy -1] == FLOOR)
 	{
-	grid_[# randx, randy] = DOORWAY
-	break
+		grid_[# randx, randy] = DOORWAY
+		break
 	}
 }
+// repeatedly picks a random spot on the map, and if suitable it will spawn a return doorway there
 repeat(1000)
 {
 	randx = irandom(width_)
 	randy = irandom(height_)
+	
 	if(grid_[# randx, randy] == FLOOR) && (grid_[# randx, randy +1] == VOID) && (grid_[# randx, randy -1] == FLOOR)
 	{
-	grid_[# randx, randy] = DOORWAY2
-	break
+		grid_[# randx, randy] = DOORWAY2
+		break
 	}
 }
+
+// repeatedly picks a random spot on the map, and if suitable it will spawn a wizard there, it will also create a hole for the wizard to reside in
 repeat(10000)
 {
 	randx = irandom(width_)
@@ -179,9 +196,10 @@ repeat(10000)
 		break
 	}
 }
+}
 
-   }
-   ini_open("map" +string(global.Level)+".ini");
+// save all the information to an ini file for later use
+ini_open("map" +string(global.Level)+".ini");
 var t_string;
 t_string = ds_grid_write(grid_);
 ini_write_string("Saved", "0", t_string);
