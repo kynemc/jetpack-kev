@@ -20,7 +20,7 @@ if (h_input != 0) && (h_speed < 4) && (h_speed > -4)
 }
 	else
 	{
-	h_speed = lerp(h_speed,0,.1)
+		h_speed = lerp(h_speed,0,.1)
 	}
 
 // Jetpack flight controls
@@ -32,7 +32,7 @@ if (v_input != 0) && (j_fuel > 0)
 	{
 		if (v_input == 1)
 		{
-		v_speed = lerp(v_speed,0,0.001)
+			v_speed = lerp(v_speed,0,0.001)
 		}
 		v_speed += gravity_ 	
 	}
@@ -61,17 +61,18 @@ if( image_xscale == 1)  && (u_key) && (j_fuel >=0)
 
 	else if( image_xscale == -1) && (u_key) && (j_fuel >=0)
 	{
-	instance_create_depth(x+4,y+11,-2,obj_jetleak)
-	sprite_index = spr_hero;	
+		instance_create_depth(x+4,y+11,-2,obj_jetleak)
+		sprite_index = spr_hero;	
 }
 
 if (!u_key) 
 {
 	jetpack = false;
 	sprite_index = spr_heron;
+	
 	if (j_fuel < 200)
 	{
-	j_fuel += .6;
+		j_fuel += .6;
 	}
 }
 
@@ -81,15 +82,18 @@ if (s_key)
 	if (image_xscale == -1)
 	{
 		target_ = instance_place(x-32,y,obj_block)
-		if(place_meeting(x-32,y,target_)){
-		instance_destroy(target_)
-	}
+		
+		if(place_meeting(x-32,y,target_))
+		{
+			instance_destroy(target_)
+		}
 	} else if (image_xscale == 1)
 	{
 		target_ = instance_place(x+32,y,obj_block)
-		if(place_meeting(x+32,y,target_)){
-		instance_destroy(target_)
-	}
+		if(place_meeting(x+32,y,target_))
+		{
+			instance_destroy(target_)
+	        }
 }
 }
 
