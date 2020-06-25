@@ -9,9 +9,9 @@ Each time the game makes a new level it will save the information in an ini file
 
 The goal of the game is basically to find the portal to the next level, open portals take you to new levels, locked portals take you to previous levels.
 
-the controls
-Movement: WASD 
-Toggle fullscreen: ALT-ENTER / F8
+the controls /
+Movement: WASD /
+Toggle fullscreen: ALT-ENTER / F8 /
 enter doorway: ENTER
 
 If you have have any other questions for me about the project please let me know, I hope you enjoy it!
